@@ -1,26 +1,30 @@
 
 $(function() {
 
-  let snakeGame = function (obj) {
+  let snakeGame = function (snake) {
 
-    let numSegments = 5;
+    let numSegments = 4;
     let direction = 'right';
+    let playing = true;
+
+    let xStart = 250; //starting x coordinate for snake
+    let yStart = 250; //starting y coordinate for snake
     let diff = 20;
 
     let xCor = [];
     let yCor = [];
 
-    xCor.push(250);
-    xCor.push(270);
-    xCor.push(290);
-    xCor.push(310);
-    xCor.push(330);
+    function initialize () {
+      snake.createCanvas(500, 500);
+      snake.frameRate(5);
+      snake.stroke(255);
+      snake.strokeWeight(10);
 
-    yCor.push(250);
-    yCor.push(250);
-    yCor.push(250);
-    yCor.push(250);
-    yCor.push(250);
+      for(let i=0;i<numSegments;i++) {
+        xCor.push(xStart+(i*diff));
+        yCor.push(yStart);
+      }
+    }
 
     function updateCordinates () {
 
@@ -42,36 +46,44 @@ $(function() {
         yCor[numSegments-1] = yCor[numSegments-2] + diff;
         break;
       }
-
     }
 
-    obj.setup = function () {
+    function checkGameStatus () {
+      if(xCor[xCor.length-1] > snake.width ||
+         xCor[xCor.length-1] < 0 ||
+         yCor[yCor.length-1] > snake.height ||
+         yCor[yCor.length-1] < 0 ) {
+        playing = false;
+      }
+    }
+
+    snake.setup = function () {
       console.log('started');
-      obj.createCanvas(500, 500);
-      obj.frameRate(5);
-      obj.stroke(255);
-      obj.strokeWeight(10);
+      initialize();
     };
 
-    obj.draw = function () {
+    snake.draw = function () {
       // console.log('xCOR : ' + xCor);
       // console.log('yCOR : ' + yCor);
-      obj.background(0);
-      for(let i=0;i<numSegments-1;i++) {
-        obj.line(xCor[i], yCor[i], xCor[i+1], yCor[i+1]);
+      if(playing) {
+        snake.background(0);
+        for(let i=0;i<numSegments-1;i++) {
+          snake.line(xCor[i], yCor[i], xCor[i+1], yCor[i+1]);
+        }
+        updateCordinates();
+        checkGameStatus();
       }
-      updateCordinates();
     };
 
-    obj.keyPressed = function () {
-      switch(obj.keyCode) {
-      case obj.LEFT_ARROW : direction = 'left';
+    snake.keyPressed = function () {
+      switch(snake.keyCode) {
+      case snake.LEFT_ARROW : direction = 'left';
         break;
-      case obj.RIGHT_ARROW : direction = 'right';
+      case snake.RIGHT_ARROW : direction = 'right';
         break;
-      case obj.UP_ARROW : direction = 'up';
+      case snake.UP_ARROW : direction = 'up';
         break;
-      case obj.DOWN_ARROW : direction = 'down';
+      case snake.DOWN_ARROW : direction = 'down';
         break;
       }
     };
