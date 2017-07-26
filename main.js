@@ -57,6 +57,14 @@ $(function() {
       }
     }
 
+    function checkForFruit () {
+      if(xCor[xCor.length-1] === 400 && yCor[yCor.length-1] === 400) {
+        xCor.unshift(xCor[0]);
+        yCor.unshift(yCor[0]);
+        numSegments++;
+      }
+    }
+
     snake.setup = function () {
       console.log('started');
       initialize();
@@ -72,6 +80,7 @@ $(function() {
         }
         updateCordinates();
         checkGameStatus();
+        checkForFruit();
       }
     };
 
