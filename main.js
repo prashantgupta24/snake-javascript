@@ -3,22 +3,29 @@ $(function() {
 
   let snakeGame = function (snake) {
 
-    let numSegments = 4;
+    let numSegments = 5;
     let direction = 'right';
     let playing = true;
 
     let xStart = 250; //starting x coordinate for snake
     let yStart = 250; //starting y coordinate for snake
-    let diff = 20;
+    let diff = 10;
 
     let xCor = [];
     let yCor = [];
 
+    let xFruit = 0;
+    let yFruit = 0;
+    let score = $('#score');
+
     function initialize () {
-      snake.createCanvas(500, 500);
-      snake.frameRate(5);
+      let canvas = snake.createCanvas(500, 500);
+      canvas.parent('snakeCanvas');
+      snake.frameRate(15);
       snake.stroke(255);
       snake.strokeWeight(10);
+      score.html(0);
+      updateFruitCoordinates();
 
       for(let i=0;i<numSegments;i++) {
         xCor.push(xStart+(i*diff));
@@ -26,7 +33,7 @@ $(function() {
       }
     }
 
-    function updateCordinates () {
+    function updateSnakeCoordinates () {
 
       for(let i=0;i<numSegments-1;i++) {
         xCor[i]=xCor[i+1];
@@ -53,16 +60,33 @@ $(function() {
          xCor[xCor.length-1] < 0 ||
          yCor[yCor.length-1] > snake.height ||
          yCor[yCor.length-1] < 0 ) {
+        alert('Game ended! Your score was : ' + score.html());
         playing = false;
       }
     }
 
     function checkForFruit () {
-      if(xCor[xCor.length-1] === 400 && yCor[yCor.length-1] === 400) {
+      snake.point(xFruit, yFruit);
+      if(xCor[xCor.length-1] === xFruit && yCor[yCor.length-1] === yFruit) {
+        let prevScore = parseInt(score.html());
+        score.html((prevScore+1));
         xCor.unshift(xCor[0]);
         yCor.unshift(yCor[0]);
         numSegments++;
+        updateFruitCoordinates();
       }
+    }
+
+    function updateFruitCoordinates () {
+      /*
+        The complex math logic is because I wanted the point to lie
+        in between 100 and width-100, and be rounded off to the nearest
+        number divisible by 10, since I move the snake in multiples of 10.
+      */
+      xFruit = (Math.floor((Math.random()*((snake.width-200)/10))+10)*10);
+      yFruit = (Math.floor((Math.random()*((snake.height-200)/10))+10)*10);
+      //console.log("x - " + xFruit);
+      //console.log("y - " + yFruit);
     }
 
     snake.setup = function () {
@@ -78,7 +102,7 @@ $(function() {
         for(let i=0;i<numSegments-1;i++) {
           snake.line(xCor[i], yCor[i], xCor[i+1], yCor[i+1]);
         }
-        updateCordinates();
+        updateSnakeCoordinates();
         checkGameStatus();
         checkForFruit();
       }
