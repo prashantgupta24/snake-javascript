@@ -2,7 +2,7 @@ $(function() {
 
   let snakeGame = function(snake) {
 
-    let numSegments = 5;
+    let numSegments = 20;
     let direction = 'right';
     let playing = true;
 
@@ -16,6 +16,11 @@ $(function() {
     let xFruit = 0;
     let yFruit = 0;
     let score = $('#score');
+
+    snake.setup = function() {
+      //console.log('started');
+      initialize();
+    };
 
     function initialize() {
       let canvas = snake.createCanvas(500, 500);
@@ -31,6 +36,20 @@ $(function() {
         yCor.push(yStart);
       }
     }
+
+    snake.draw = function() {
+      // console.log('xCOR : ' + xCor);
+      // console.log('yCOR : ' + yCor);
+      if (playing) {
+        snake.background(0);
+        for (let i = 0; i < numSegments - 1; i++) {
+          snake.line(xCor[i], yCor[i], xCor[i + 1], yCor[i + 1]);
+        }
+        updateSnakeCoordinates();
+        checkGameStatus();
+        checkForFruit();
+      }
+    };
 
     function updateSnakeCoordinates() {
 
@@ -60,11 +79,36 @@ $(function() {
 
     function checkGameStatus() {
       if (xCor[xCor.length - 1] > snake.width ||
-        xCor[xCor.length - 1] < 0 ||
-        yCor[yCor.length - 1] > snake.height ||
-        yCor[yCor.length - 1] < 0) {
-        alert('Game ended! Your score was : ' + score.html());
+          xCor[xCor.length - 1] < 0 ||
+          yCor[yCor.length - 1] > snake.height ||
+          yCor[yCor.length - 1] < 0 ||
+          checkSnakeCollision()) {
         playing = false;
+        let scoreVal = score.html();
+        score.html('Game ended! Your score was : ' + scoreVal);
+      }
+    }
+
+    function checkSnakeCollision () {
+      // let indexOfX = xCor.indexOf(xCor[xCor.length - 1]);
+      // let indexOfY = yCor.indexOf(yCor[yCor.length - 1]);
+      //  console.log('xCor ->' + xCor);
+      //  console.log('yCor ->' + yCor);
+      // console.log(indexOfX, indexOfY);
+      // if( indexOfX == indexOfY) {
+      //   //console.log('xCor : ' + xCor.indexOf(xCor[xCor.length - 1]) + ', yCor : ' + yCor.indexOf(yCor[yCor.length - 1]));
+      //   console.log(indexOfX);
+      //   console.log(indexOfY);
+      // }
+      let lastX = xCor[xCor.length - 1];
+      let lastY = yCor[yCor.length - 1];
+      for(let i=0;i<xCor.length-1;i++){
+        if(xCor[i] === lastX) {
+          if(yCor[i] === lastY) {
+            //console.log('Hit!');
+            return true;
+          }
+        }
       }
     }
 
@@ -91,25 +135,6 @@ $(function() {
       //console.log("x - " + xFruit);
       //console.log("y - " + yFruit);
     }
-
-    snake.setup = function() {
-      console.log('started');
-      initialize();
-    };
-
-    snake.draw = function() {
-      // console.log('xCOR : ' + xCor);
-      // console.log('yCOR : ' + yCor);
-      if (playing) {
-        snake.background(0);
-        for (let i = 0; i < numSegments - 1; i++) {
-          snake.line(xCor[i], yCor[i], xCor[i + 1], yCor[i + 1]);
-        }
-        updateSnakeCoordinates();
-        checkGameStatus();
-        checkForFruit();
-      }
-    };
 
     snake.keyPressed = function() {
       switch (snake.keyCode) {
