@@ -1,22 +1,22 @@
 $(function() {
 
-  let snakeGame = function(snake) {
+  const snakeGame = function(snake) {
 
     // the snake is divided into small segments, which are drawn and edited on each 'draw' call
     let numSegments = 10;
     let direction = 'right';
     let playing = true;
 
-    let xStart = 250; //starting x coordinate for snake
-    let yStart = 250; //starting y coordinate for snake
-    let diff = 10;
+    const SNAKE_XSTART = 250; //starting x coordinate for snake
+    const SNAKE_YSTART = 250; //starting y coordinate for snake
+    const DIFF = 10;
 
-    let xCor = [];
-    let yCor = [];
+    const X_COR = [];
+    const Y_COR = [];
 
     let xFruit = 0;
     let yFruit = 0;
-    let score = $('#score');
+    const SCORE = $('#score');
 
     snake.setup = function() {
       //console.log('started');
@@ -24,27 +24,27 @@ $(function() {
     };
 
     function initialize() {
-      let canvas = snake.createCanvas(500, 500);
-      canvas.parent('snakeCanvas');
+      const CANVAS = snake.createCanvas(500, 500);
+      CANVAS.parent('snakeCanvas');
       snake.frameRate(15);
       snake.stroke(255);
       snake.strokeWeight(10);
-      score.html(0);
+      SCORE.html(0);
       updateFruitCoordinates();
 
       for (let i = 0; i < numSegments; i++) {
-        xCor.push(xStart + (i * diff));
-        yCor.push(yStart);
+        X_COR.push(SNAKE_XSTART + (i * DIFF));
+        Y_COR.push(SNAKE_YSTART);
       }
     }
 
     snake.draw = function() {
-      // console.log('xCOR : ' + xCor);
-      // console.log('yCOR : ' + yCor);
+      // console.log('xCOR : ' + X_COR);
+      // console.log('yCOR : ' + Y_COR);
       if (playing) {
         snake.background(0);
         for (let i = 0; i < numSegments - 1; i++) {
-          snake.line(xCor[i], yCor[i], xCor[i + 1], yCor[i + 1]);
+          snake.line(X_COR[i], Y_COR[i], X_COR[i + 1], Y_COR[i + 1]);
         }
         updateSnakeCoordinates();
         checkGameStatus();
@@ -60,49 +60,49 @@ $(function() {
 
      The last segment is added based on the direction in which the snake is going,
      if it's going left or right, the last segment's x coordinate is increased by a
-     predefined value 'diff' than its second to last segment. And if it's going up
+     predefined value 'DIFF' than its second to last segment. And if it's going up
      or down, the segment's y coordinate is affected.
     */
     function updateSnakeCoordinates() {
 
       for (let i = 0; i < numSegments - 1; i++) {
-        xCor[i] = xCor[i + 1];
-        yCor[i] = yCor[i + 1];
+        X_COR[i] = X_COR[i + 1];
+        Y_COR[i] = Y_COR[i + 1];
       }
       switch (direction) {
       case 'right':
-        xCor[numSegments - 1] = xCor[numSegments - 2] + diff;
-        yCor[numSegments - 1] = yCor[numSegments - 2];
+        X_COR[numSegments - 1] = X_COR[numSegments - 2] + DIFF;
+        Y_COR[numSegments - 1] = Y_COR[numSegments - 2];
         break;
       case 'up':
-        xCor[numSegments - 1] = xCor[numSegments - 2];
-        yCor[numSegments - 1] = yCor[numSegments - 2] - diff;
+        X_COR[numSegments - 1] = X_COR[numSegments - 2];
+        Y_COR[numSegments - 1] = Y_COR[numSegments - 2] - DIFF;
         break;
       case 'left':
-        xCor[numSegments - 1] = xCor[numSegments - 2] - diff;
-        yCor[numSegments - 1] = yCor[numSegments - 2];
+        X_COR[numSegments - 1] = X_COR[numSegments - 2] - DIFF;
+        Y_COR[numSegments - 1] = Y_COR[numSegments - 2];
         break;
       case 'down':
-        xCor[numSegments - 1] = xCor[numSegments - 2];
-        yCor[numSegments - 1] = yCor[numSegments - 2] + diff;
+        X_COR[numSegments - 1] = X_COR[numSegments - 2];
+        Y_COR[numSegments - 1] = Y_COR[numSegments - 2] + DIFF;
         break;
       }
     }
 
     /*
-     I always check the snake's head position xCor[xCor.length - 1] and
-     yCor[yCor.length - 1] to see if it touches the game's boundaries
+     I always check the snake's head position X_COR[X_COR.length - 1] and
+     Y_COR[Y_COR.length - 1] to see if it touches the game's boundaries
      or if the snake hits itself.
     */
     function checkGameStatus() {
-      if (xCor[xCor.length - 1] > snake.width ||
-          xCor[xCor.length - 1] < 0 ||
-          yCor[yCor.length - 1] > snake.height ||
-          yCor[yCor.length - 1] < 0 ||
+      if (X_COR[X_COR.length - 1] > snake.width ||
+          X_COR[X_COR.length - 1] < 0 ||
+          Y_COR[Y_COR.length - 1] > snake.height ||
+          Y_COR[Y_COR.length - 1] < 0 ||
           checkSnakeCollision()) {
         playing = false;
-        let scoreVal = score.html();
-        score.html('Game ended! Your score was : ' + scoreVal);
+        const scoreVal = SCORE.html();
+        SCORE.html('Game ended! Your score was : ' + scoreVal);
       }
     }
 
@@ -111,11 +111,11 @@ $(function() {
      has to be the same as one of its own segment's (x,y) coordinate.
     */
     function checkSnakeCollision () {
-      let snakeHeadX = xCor[xCor.length - 1];
-      let snakeHeadY = yCor[yCor.length - 1];
-      for(let i=0;i<xCor.length-1;i++){
-        if(xCor[i] === snakeHeadX) {
-          if(yCor[i] === snakeHeadY) {
+      const snakeHeadX = X_COR[X_COR.length - 1];
+      const snakeHeadY = Y_COR[Y_COR.length - 1];
+      for(let i=0;i<X_COR.length-1;i++){
+        if(X_COR[i] === snakeHeadX) {
+          if(Y_COR[i] === snakeHeadY) {
             //console.log('Hit!');
             return true;
           }
@@ -130,11 +130,11 @@ $(function() {
     */
     function checkForFruit() {
       snake.point(xFruit, yFruit);
-      if (xCor[xCor.length - 1] === xFruit && yCor[yCor.length - 1] === yFruit) {
-        let prevScore = parseInt(score.html());
-        score.html((prevScore + 1));
-        xCor.unshift(xCor[0]);
-        yCor.unshift(yCor[0]);
+      if (X_COR[X_COR.length - 1] === xFruit && Y_COR[Y_COR.length - 1] === yFruit) {
+        const prevScore = parseInt(SCORE.html());
+        SCORE.html((prevScore + 1));
+        X_COR.unshift(X_COR[0]);
+        Y_COR.unshift(Y_COR[0]);
         numSegments++;
         updateFruitCoordinates();
       }
@@ -178,6 +178,6 @@ $(function() {
     };
   };
 
-  let snakeGameObj = new p5(snakeGame);
+  const snakeGameObj = new p5(snakeGame);
 
 });
