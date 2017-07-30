@@ -1,6 +1,6 @@
 $(function() {
 
-  const snakeGame = function(snake) {
+  const SNAKE_GAME = function(snake) {
 
     // the snake is divided into small segments, which are drawn and edited on each 'draw' call
     let numSegments = 10;
@@ -101,8 +101,8 @@ $(function() {
           Y_COR[Y_COR.length - 1] < 0 ||
           checkSnakeCollision()) {
         playing = false;
-        const scoreVal = SCORE.html();
-        SCORE.html('Game ended! Your score was : ' + scoreVal);
+        const SCORE_VAL = SCORE.html();
+        SCORE.html('Game ended! Your score was : ' + SCORE_VAL);
       }
     }
 
@@ -111,11 +111,11 @@ $(function() {
      has to be the same as one of its own segment's (x,y) coordinate.
     */
     function checkSnakeCollision () {
-      const snakeHeadX = X_COR[X_COR.length - 1];
-      const snakeHeadY = Y_COR[Y_COR.length - 1];
+      const SNAKE_HEAD_X = X_COR[X_COR.length - 1];
+      const SNAKE_HEAD_Y = Y_COR[Y_COR.length - 1];
       for(let i=0;i<X_COR.length-1;i++){
-        if(X_COR[i] === snakeHeadX) {
-          if(Y_COR[i] === snakeHeadY) {
+        if(X_COR[i] === SNAKE_HEAD_X) {
+          if(Y_COR[i] === SNAKE_HEAD_Y) {
             //console.log('Hit!');
             return true;
           }
@@ -131,8 +131,8 @@ $(function() {
     function checkForFruit() {
       snake.point(xFruit, yFruit);
       if (X_COR[X_COR.length - 1] === xFruit && Y_COR[Y_COR.length - 1] === yFruit) {
-        const prevScore = parseInt(SCORE.html());
-        SCORE.html((prevScore + 1));
+        const PREV_SCORE = parseInt(SCORE.html());
+        SCORE.html((PREV_SCORE + 1));
         X_COR.unshift(X_COR[0]);
         Y_COR.unshift(Y_COR[0]);
         numSegments++;
@@ -178,6 +178,6 @@ $(function() {
     };
   };
 
-  const snakeGameObj = new p5(snakeGame);
+  const SNAKE_GAME_OBJ = new p5(SNAKE_GAME);
 
 });
