@@ -5,7 +5,6 @@ $(function() {
     // the snake is divided into small segments, which are drawn and edited on each 'draw' call
     let numSegments = 10;
     let direction = 'right';
-    let playing = true;
 
     const SNAKE_XSTART = 250; //starting x coordinate for snake
     const SNAKE_YSTART = 250; //starting y coordinate for snake
@@ -20,10 +19,6 @@ $(function() {
 
     snake.setup = function() {
       //console.log('started');
-      initialize();
-    };
-
-    function initialize() {
       const CANVAS = snake.createCanvas(500, 500);
       CANVAS.parent('snakeCanvas');
       snake.frameRate(15);
@@ -36,20 +31,18 @@ $(function() {
         X_COR.push(SNAKE_XSTART + (i * DIFF));
         Y_COR.push(SNAKE_YSTART);
       }
-    }
+    };
 
     snake.draw = function() {
       // console.log('xCOR : ' + X_COR);
       // console.log('yCOR : ' + Y_COR);
-      if (playing) {
-        snake.background(0);
-        for (let i = 0; i < numSegments - 1; i++) {
-          snake.line(X_COR[i], Y_COR[i], X_COR[i + 1], Y_COR[i + 1]);
-        }
-        updateSnakeCoordinates();
-        checkGameStatus();
-        checkForFruit();
+      snake.background(0);
+      for (let i = 0; i < numSegments - 1; i++) {
+        snake.line(X_COR[i], Y_COR[i], X_COR[i + 1], Y_COR[i + 1]);
       }
+      updateSnakeCoordinates();
+      checkGameStatus();
+      checkForFruit();
     };
 
     /*
@@ -70,23 +63,23 @@ $(function() {
         Y_COR[i] = Y_COR[i + 1];
       }
       switch (direction) {
-      case 'right':
-        X_COR[numSegments - 1] = X_COR[numSegments - 2] + DIFF;
-        Y_COR[numSegments - 1] = Y_COR[numSegments - 2];
-        break;
-      case 'up':
-        X_COR[numSegments - 1] = X_COR[numSegments - 2];
-        Y_COR[numSegments - 1] = Y_COR[numSegments - 2] - DIFF;
-        break;
-      case 'left':
-        X_COR[numSegments - 1] = X_COR[numSegments - 2] - DIFF;
-        Y_COR[numSegments - 1] = Y_COR[numSegments - 2];
-        break;
-      case 'down':
-        X_COR[numSegments - 1] = X_COR[numSegments - 2];
-        Y_COR[numSegments - 1] = Y_COR[numSegments - 2] + DIFF;
-        break;
-      }
+        case 'right':
+          X_COR[numSegments - 1] = X_COR[numSegments - 2] + DIFF;
+          Y_COR[numSegments - 1] = Y_COR[numSegments - 2];
+          break;
+        case 'up':
+          X_COR[numSegments - 1] = X_COR[numSegments - 2];
+          Y_COR[numSegments - 1] = Y_COR[numSegments - 2] - DIFF;
+          break;
+        case 'left':
+          X_COR[numSegments - 1] = X_COR[numSegments - 2] - DIFF;
+          Y_COR[numSegments - 1] = Y_COR[numSegments - 2];
+          break;
+        case 'down':
+          X_COR[numSegments - 1] = X_COR[numSegments - 2];
+          Y_COR[numSegments - 1] = Y_COR[numSegments - 2] + DIFF;
+          break;
+        }
     }
 
     /*
@@ -100,7 +93,7 @@ $(function() {
           Y_COR[Y_COR.length - 1] > snake.height ||
           Y_COR[Y_COR.length - 1] < 0 ||
           checkSnakeCollision()) {
-        playing = false;
+        snake.noLoop();
         const SCORE_VAL = SCORE.html();
         SCORE.html('Game ended! Your score was : ' + SCORE_VAL);
       }
@@ -114,11 +107,8 @@ $(function() {
       const SNAKE_HEAD_X = X_COR[X_COR.length - 1];
       const SNAKE_HEAD_Y = Y_COR[Y_COR.length - 1];
       for(let i=0;i<X_COR.length-1;i++){
-        if(X_COR[i] === SNAKE_HEAD_X) {
-          if(Y_COR[i] === SNAKE_HEAD_Y) {
-            //console.log('Hit!');
-            return true;
-          }
+        if(X_COR[i] === SNAKE_HEAD_X && Y_COR[i] === SNAKE_HEAD_Y) {
+          return true;
         }
       }
     }
@@ -146,8 +136,8 @@ $(function() {
         in between 100 and width-100, and be rounded off to the nearest
         number divisible by 10, since I move the snake in multiples of 10.
       */
-      xFruit = (Math.floor((Math.random() * ((snake.width - 200) / 10)) + 10) * 10);
-      yFruit = (Math.floor((Math.random() * ((snake.height - 200) / 10)) + 10) * 10);
+      xFruit = snake.floor(snake.random(10,(snake.width-100)/10))*10;
+      yFruit = snake.floor(snake.random(10,(snake.height-100)/10))*10;
       //console.log("x - " + xFruit);
       //console.log("y - " + yFruit);
     }
