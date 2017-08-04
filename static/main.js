@@ -4,19 +4,20 @@ $(function() {
   $('#player_name').focus();
 
   $(document).on('keypress', function(event) {
-    if(event.keyCode === 13) {
+    if (event.keyCode === 13) {
       startGame();
     }
   });
 
-  $('#start_game').on('click', function () {
+  $('#start_game').on('click', function() {
     startGame();
   });
 
   function startGame() {
     const playerName = $('#player_name').val();
-    if(playerName.length<3) {
-      $('#error').html('Please enter a decent name dude (at least 3 characters)');
+    if (playerName.length < 3 ||
+      playerName.indexOf('prashant') > -1) {
+      $('#error').html('Please enter a decent name');
     } else {
       $('#initialDiv').hide();
       $('#scoreDiv').show();
@@ -27,11 +28,24 @@ $(function() {
   let socket = io();
 
   socket.emit('new player');
-
   socket.on('updateScoreboard', function(data) {
-    //console.log(data);
-    console.log('received updated scoreboard');
+    console.log('received updated scoreboard' + data);
+    let num = 2;
+    $('#highScoreTable').find('tr:gt(1)').remove();
+    let objArray = data;
+    objArray.sort(comp);
+    for (let i = 0; i < objArray.length && i<10; i++) {
+      let json = objArray[i];
+      //console.log(json.name + ' : ' + json.val);
+      let markup = '<tr><td>' + num + '</td><td>' + json.name + '</td><td>' + json.val + '</td></tr>';
+      $('#highScoreTable').append(markup);
+      num++;
+    }
   });
+
+  function comp(a, b) {
+    return parseInt(a.val) < parseInt(b.val);
+  }
 
   const SNAKE_GAME = function(snake) {
 
@@ -115,7 +129,7 @@ $(function() {
           X_COR[numSegments - 1] = X_COR[numSegments - 2];
           Y_COR[numSegments - 1] = Y_COR[numSegments - 2] + DIFF;
           break;
-        }
+      }
     }
 
     /*
@@ -125,15 +139,15 @@ $(function() {
     */
     function checkGameStatus() {
       if (X_COR[X_COR.length - 1] > snake.width ||
-          X_COR[X_COR.length - 1] < 0 ||
-          Y_COR[Y_COR.length - 1] > snake.height ||
-          Y_COR[Y_COR.length - 1] < 0 ||
-          checkSnakeCollision()) {
+        X_COR[X_COR.length - 1] < 0 ||
+        Y_COR[Y_COR.length - 1] > snake.height ||
+        Y_COR[Y_COR.length - 1] < 0 ||
+        checkSnakeCollision()) {
         snake.noLoop();
         const SCORE_VAL = SCORE.html();
         socket.emit('result', {
-          name:$('#player_name').val(),
-          val:SCORE_VAL
+          name: $('#player_name').val(),
+          val: SCORE_VAL
         });
         SCORE.html('Game ended! Your score was : ' + SCORE_VAL);
       }
@@ -143,11 +157,11 @@ $(function() {
      If the snake hits itself, that means the snake head's (x,y) coordinate
      has to be the same as one of its own segment's (x,y) coordinate.
     */
-    function checkSnakeCollision () {
+    function checkSnakeCollision() {
       const SNAKE_HEAD_X = X_COR[X_COR.length - 1];
       const SNAKE_HEAD_Y = Y_COR[Y_COR.length - 1];
-      for(let i=0;i<X_COR.length-1;i++){
-        if(X_COR[i] === SNAKE_HEAD_X && Y_COR[i] === SNAKE_HEAD_Y) {
+      for (let i = 0; i < X_COR.length - 1; i++) {
+        if (X_COR[i] === SNAKE_HEAD_X && Y_COR[i] === SNAKE_HEAD_Y) {
           return true;
         }
       }
@@ -176,34 +190,34 @@ $(function() {
         in between 100 and width-100, and be rounded off to the nearest
         number divisible by 10, since I move the snake in multiples of 10.
       */
-      xFruit = snake.floor(snake.random(10,(snake.width-100)/10))*10;
-      yFruit = snake.floor(snake.random(10,(snake.height-100)/10))*10;
+      xFruit = snake.floor(snake.random(10, (snake.width - 100) / 10)) * 10;
+      yFruit = snake.floor(snake.random(10, (snake.height - 100) / 10)) * 10;
       //console.log("x - " + xFruit);
       //console.log("y - " + yFruit);
     }
 
     snake.keyPressed = function() {
       switch (snake.keyCode) {
-      case snake.LEFT_ARROW:
-        if (direction != 'right') {
-          direction = 'left';
-        }
-        break;
-      case snake.RIGHT_ARROW:
-        if (direction != 'left') {
-          direction = 'right';
-        }
-        break;
-      case snake.UP_ARROW:
-        if (direction != 'down') {
-          direction = 'up';
-        }
-        break;
-      case snake.DOWN_ARROW:
-        if (direction != 'up') {
-          direction = 'down';
-        }
-        break;
+        case snake.LEFT_ARROW:
+          if (direction != 'right') {
+            direction = 'left';
+          }
+          break;
+        case snake.RIGHT_ARROW:
+          if (direction != 'left') {
+            direction = 'right';
+          }
+          break;
+        case snake.UP_ARROW:
+          if (direction != 'down') {
+            direction = 'up';
+          }
+          break;
+        case snake.DOWN_ARROW:
+          if (direction != 'up') {
+            direction = 'down';
+          }
+          break;
       }
     };
   };

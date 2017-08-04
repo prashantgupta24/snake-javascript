@@ -1,0 +1,19 @@
+#highScoreTable {
+  border-collapse: collapse;
+  width: 100%;
+  border: 1px solid #ddd;
+  font-size: 18px;
+}
+
+#highScoreTable th, #highScoreTable td {
+  text-align: left;
+  padding: 12px;
+}
+
+#highScoreTable tr {
+  border-bottom: 1px solid #ddd;
+}
+
+#highScoreTable tr.header, #highScoreTable tr:hover {
+  background-color: #f1f1f1;
+}

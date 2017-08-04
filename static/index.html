@@ -2,6 +2,7 @@
 <html>
 
 <head>
+  <link rel="stylesheet" href="static/style.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.11/p5.min.js"></script>
   <script src="/socket.io/socket.io.js"></script>
@@ -11,18 +12,34 @@
 <body>
 
   <div id="initialDiv">
-      <h3>Please enter name to start: (min 3 characters) </h3>
-      <input type=text id = "player_name"></input>
-      <input type=button id = "start_game" value="Start Game"></input>
-      <p id="error"></p>
+    <h3>Please enter name to start: (min 3 characters) </h3>
+    <input type=text id="player_name"></input>
+    <input type=button id="start_game" value="Start Game"></input>
+    <p id="error"></p>
   </div>
 
-  <div id = "scoreDiv">
+  <div id="scoreDiv">
     <h3>Score: </h3>
     <p id="score"></p>
   </div>
 
-  <div id="snakeCanvas">
+  <div style="float=left">
+    <div id="snakeCanvas"></div>
+    <h2>SCOREBOARD</h2>
+    <div>
+      <table id="highScoreTable">
+        <tr class="header">
+          <th style="width:20%;">Position</th>
+          <th style="width:40%;">Name</th>
+          <th style="width:40%;">Score</th>
+        </tr>
+        <tr>
+          <td>1</td>
+          <td>Prashant Gupta</td>
+          <td>999</td>
+        </tr>
+      </table>
+    </div>
   </div>
 
 </body>
