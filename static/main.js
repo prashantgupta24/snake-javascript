@@ -1,12 +1,45 @@
 $(function() {
 
+  $('#scoreDiv').hide();
+  $('#player_name').focus();
+
+  $(document).on('keypress', function(event) {
+    if(event.keyCode === 13) {
+      startGame();
+    }
+  });
+
+  $('#start_game').on('click', function () {
+    startGame();
+  });
+
+  function startGame() {
+    const playerName = $('#player_name').val();
+    if(playerName.length<3) {
+      $('#error').html('Please enter a decent name dude (at least 3 characters)');
+    } else {
+      $('#initialDiv').hide();
+      $('#scoreDiv').show();
+      const SNAKE_GAME_OBJ = new p5(SNAKE_GAME);
+    }
+  }
+
+  let socket = io();
+
+  socket.emit('new player');
+
+  socket.on('updateScoreboard', function(data) {
+    //console.log(data);
+    console.log('received updated scoreboard');
+  });
+
   const SNAKE_GAME = function(snake) {
 
     // the snake is divided into small segments, which are drawn and edited on each 'draw' call
     let numSegments = 10;
     let direction = 'right';
 
-    const SNAKE_XSTART = 250; //starting x coordinate for snake
+    const SNAKE_XSTART = 0; //starting x coordinate for snake
     const SNAKE_YSTART = 250; //starting y coordinate for snake
     const DIFF = 10;
 
@@ -26,6 +59,9 @@ $(function() {
       snake.strokeWeight(10);
       SCORE.html(0);
       updateFruitCoordinates();
+      // snake.noLoop();
+      //
+      // setInterval(snake.loop(), 4000);
 
       for (let i = 0; i < numSegments; i++) {
         X_COR.push(SNAKE_XSTART + (i * DIFF));
@@ -95,6 +131,10 @@ $(function() {
           checkSnakeCollision()) {
         snake.noLoop();
         const SCORE_VAL = SCORE.html();
+        socket.emit('result', {
+          name:$('#player_name').val(),
+          val:SCORE_VAL
+        });
         SCORE.html('Game ended! Your score was : ' + SCORE_VAL);
       }
     }
@@ -168,6 +208,6 @@ $(function() {
     };
   };
 
-  const SNAKE_GAME_OBJ = new p5(SNAKE_GAME);
+
 
 });
