@@ -1,51 +1,59 @@
 $(function() {
 
-  $('#scoreDiv').hide();
-  $('#player_name').focus();
+  initializePage();
+  let socket = initializeSocket();
 
-  $(document).on('keypress', function(event) {
-    if (event.keyCode === 13) {
+  function initializePage() {
+    $('#scoreDiv').hide();
+    $('#player_name').focus();
+
+    $(document).on('keypress', function(event) {
+      if (event.keyCode === 13) {
+        startGame();
+      }
+    });
+
+    $('#start_game').on('click', function() {
       startGame();
-    }
-  });
+    });
 
-  $('#start_game').on('click', function() {
-    startGame();
-  });
-
-  function startGame() {
-    const playerName = $('#player_name').val();
-    if (playerName.length < 3 ||
-      playerName.indexOf('prashant') > -1) {
-      $('#error').html('Please enter a decent name');
-    } else {
-      $('#initialDiv').hide();
-      $('#scoreDiv').show();
-      const SNAKE_GAME_OBJ = new p5(SNAKE_GAME);
+    function startGame() {
+      const playerName = $('#player_name').val();
+      if (playerName.length < 3 ||
+        playerName.indexOf('prashant') > -1) {
+        $('#error').html('Please enter a decent name');
+      } else {
+        $('#initialDiv').hide();
+        $('#scoreDiv').show();
+        const SNAKE_GAME_OBJ = new p5(SNAKE_GAME);
+      }
     }
   }
 
-  let socket = io();
 
-  socket.emit('new player');
-  socket.on('updateScoreboard', function(data) {
-    console.log('received updated scoreboard' + data);
-    let num = 2;
-    $('#highScoreTable').find('tr:gt(1)').remove();
-    let objArray = data;
-    objArray.sort(comp);
-    for (let i = 0; i < objArray.length && i<9; i++) {
-      let json = objArray[i];
-      //console.log(json.name + ' : ' + json.val);
-      let markup = '<tr><td>' + num + '</td><td>' + json.name + '</td><td>' + json.val + '</td></tr>';
-      $('#highScoreTable').append(markup);
-      num++;
-    }
-  });
+  function initializeSocket() {
+    let socket = io();
+    socket.emit('new player');
+    socket.on('updateScoreboard', function(data) {
+      console.log('received updated scoreboard');
+      let num = 2;
+      $('#highScoreTable').find('tr:gt(1)').remove();
+      let objArray = data;
+      objArray.sort(function(a, b) {
+        return parseInt(b.val) - parseInt(a.val);
+      });
+      for (let i = 0; i < objArray.length && i<9; i++) {
+        let json = objArray[i];
+        //console.log(json.name + ' : ' + json.val);
+        let markup = '<tr><td>' + num + '</td><td>' + json.name + '</td><td>' + json.val + '</td></tr>';
+        $('#highScoreTable').append(markup);
+        num++;
+      }
+    });
 
-  function comp(a, b) {
-    return parseInt(a.val) < parseInt(b.val);
+    return socket;
   }
+
 
   const SNAKE_GAME = function(snake) {
 

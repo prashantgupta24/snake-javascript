@@ -17,6 +17,10 @@ app.get('/', function(request, response) {
   response.sendFile(path.join(__dirname, 'static/index.html'));
 });
 
+app.get('/asd', function(request, response) {
+  response.end('Database deleted!');
+});
+
 server.listen((process.env.PORT || 5000), function() {
   console.log('Starting server on port 5000');
 
