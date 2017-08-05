@@ -54,12 +54,22 @@ io.on('connection', function(socket) {
       //console.log("Reading file asynchronously");
       objArray = data? JSON.parse(data) : [];
       objArray.push(obj);
+      sortAndCleanData(objArray);
       fs.writeFile(dataFile, JSON.stringify(objArray, null, 2), function(err) {
         if (err) throw err;
       });
       objArray = [];
     });
   });
+
+  function sortAndCleanData(objArray) {
+    objArray.sort(function(a, b) {
+      return parseInt(b.val) - parseInt(a.val);
+    });
+    if(objArray.length>9) {
+      objArray.pop();
+    }
+  }
 
   setInterval(function() {
     fs.readFile(dataFile, 'utf8', function(err, data) {

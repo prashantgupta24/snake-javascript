@@ -39,9 +39,6 @@ $(function() {
       let num = 2;
       $('#highScoreTable').find('tr:gt(1)').remove();
       let objArray = data;
-      objArray.sort(function(a, b) {
-        return parseInt(b.val) - parseInt(a.val);
-      });
       for (let i = 0; i < objArray.length && i<9; i++) {
         let json = objArray[i];
         //console.log(json.name + ' : ' + json.val);
