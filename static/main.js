@@ -34,7 +34,7 @@ $(function() {
     $('#highScoreTable').find('tr:gt(1)').remove();
     let objArray = data;
     objArray.sort(comp);
-    for (let i = 0; i < objArray.length && i<10; i++) {
+    for (let i = 0; i < objArray.length && i<9; i++) {
       let json = objArray[i];
       //console.log(json.name + ' : ' + json.val);
       let markup = '<tr><td>' + num + '</td><td>' + json.name + '</td><td>' + json.val + '</td></tr>';
@@ -73,9 +73,6 @@ $(function() {
       snake.strokeWeight(10);
       SCORE.html(0);
       updateFruitCoordinates();
-      // snake.noLoop();
-      //
-      // setInterval(snake.loop(), 4000);
 
       for (let i = 0; i < numSegments; i++) {
         X_COR.push(SNAKE_XSTART + (i * DIFF));
@@ -221,7 +218,4 @@ $(function() {
       }
     };
   };
-
-
-
 });
