@@ -17,9 +17,17 @@ app.get('/', function(request, response) {
   response.sendFile(path.join(__dirname, 'static/index.html'));
 });
 
-app.get('/asd', function(request, response) {
+app.get('/12477421', function(request, response) {
+  fs.writeFile(dataFile, '', function(err) {
+    if (err) throw err;
+  });
   response.end('Database deleted!');
 });
+
+// app.get('/aaa/:user/:score', function (request, response) {
+//   console.log(request.params.user + ': ' + request.params.score);
+//   response.end('added!');
+// });
 
 server.listen((process.env.PORT || 5000), function() {
   console.log('Starting server on port 5000');

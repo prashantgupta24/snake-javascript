@@ -25,6 +25,7 @@ $(function() {
       } else {
         $('#initialDiv').hide();
         $('#scoreDiv').show();
+        $(document).unbind('keypress');
         const SNAKE_GAME_OBJ = new p5(SNAKE_GAME);
       }
     }
