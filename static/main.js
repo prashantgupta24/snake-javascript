@@ -1,38 +1,42 @@
 $(function() {
 
-  initializePage();
-  let socket = initializeSocket();
+  const initializePage = function() {
+    if ($.cookie('username')) {
+      console.log('Welcome back ' + $.cookie('username'));
+      $('#initialDiv').hide();
+      initializeSnakeGame();
+    } else {
+      $('#scoreDiv').hide();
+      $('#player_name').focus();
 
-  function initializePage() {
-    $('#scoreDiv').hide();
-    $('#player_name').focus();
+      $(document).on('keypress', function(event) {
+        if (event.keyCode === 13) {
+          setupGame();
+        }
+      });
 
-    $(document).on('keypress', function(event) {
-      if (event.keyCode === 13) {
-        startGame();
-      }
-    });
-
-    $('#start_game').on('click', function() {
-      startGame();
-    });
-
-    function startGame() {
-      const playerName = $('#player_name').val();
-      if (playerName.length < 3 ||
-        playerName.indexOf('prashant') > -1) {
-        $('#error').html('Please enter a decent name');
-      } else {
-        $('#initialDiv').hide();
-        $('#scoreDiv').show();
-        $(document).unbind('keypress');
-        const SNAKE_GAME_OBJ = new p5(SNAKE_GAME);
-      }
+      $('#start_game').on('click', function() {
+        setupGame();
+      });
     }
+  };
+
+
+  function setupGame() {
+    const playerName = $('#player_name').val();
+    if (playerName.length < 3 ||
+      playerName.indexOf('prashant') > -1) {
+      $('#error').html('Please enter a decent name');
+    } else {
+      $.cookie('username', playerName);
+      $('#initialDiv').hide();
+      $('#scoreDiv').show();
+      $(document).unbind('keypress');
+    }
+    initializeSnakeGame();
   }
 
-
-  function initializeSocket() {
+  const socket = (function() {
     let socket = io();
     socket.emit('new player');
     socket.on('updateScoreboard', function(data) {
@@ -40,7 +44,7 @@ $(function() {
       let num = 2;
       $('#highScoreTable').find('tr:gt(1)').remove();
       let objArray = data;
-      for (let i = 0; i < objArray.length && i<9; i++) {
+      for (let i = 0; i < objArray.length && i < 9; i++) {
         let json = objArray[i];
         //console.log(json.name + ' : ' + json.val);
         let markup = '<tr><td>' + num + '</td><td>' + json.name + '</td><td>' + json.val + '</td></tr>';
@@ -50,8 +54,7 @@ $(function() {
     });
 
     return socket;
-  }
-
+  })();
 
   const SNAKE_GAME = function(snake) {
 
@@ -71,7 +74,6 @@ $(function() {
     const SCORE = $('#score');
 
     snake.setup = function() {
-      //console.log('started');
       const CANVAS = snake.createCanvas(500, 500);
       CANVAS.parent('snakeCanvas');
       snake.frameRate(15);
@@ -149,7 +151,7 @@ $(function() {
         snake.noLoop();
         const SCORE_VAL = SCORE.html();
         socket.emit('result', {
-          name: $('#player_name').val(),
+          name: $.cookie('username'),
           val: SCORE_VAL
         });
         SCORE.html('Game ended! Your score was : ' + SCORE_VAL);
@@ -224,4 +226,10 @@ $(function() {
       }
     };
   };
+
+  initializePage();
+
+  function initializeSnakeGame() {
+    const SNAKE_GAME_OBJ = new p5(SNAKE_GAME);
+  }
 });

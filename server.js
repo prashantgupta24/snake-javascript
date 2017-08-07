@@ -1,4 +1,5 @@
 var express = require('express');
+var cookieParser = require('cookie-parser');
 var http = require('http');
 var path = require('path');
 var socketIO = require('socket.io');
@@ -9,6 +10,7 @@ var app = express();
 var server = http.Server(app);
 var io = socketIO(server);
 
+app.use(cookieParser());
 app.set('port', (process.env.PORT || 5000));
 app.use('/static', express.static(__dirname + '/static'));
 
