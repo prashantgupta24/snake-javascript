@@ -65,6 +65,7 @@ $(function() {
     const SNAKE_XSTART = 0; //starting x coordinate for snake
     const SNAKE_YSTART = 250; //starting y coordinate for snake
     const DIFF = 10;
+    let frameRate = 15;
 
     const X_COR = [];
     const Y_COR = [];
@@ -76,7 +77,7 @@ $(function() {
     snake.setup = function() {
       const CANVAS = snake.createCanvas(500, 500);
       CANVAS.parent('snakeCanvas');
-      snake.frameRate(15);
+      snake.frameRate(frameRate);
       snake.stroke(255);
       snake.strokeWeight(10);
       SCORE.html(0);
@@ -185,6 +186,7 @@ $(function() {
         X_COR.unshift(X_COR[0]);
         Y_COR.unshift(Y_COR[0]);
         numSegments++;
+        snake.setFrameRate(frameRate++);
         updateFruitCoordinates();
       }
     }
