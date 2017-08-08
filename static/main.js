@@ -32,8 +32,8 @@ $(function() {
       $('#initialDiv').hide();
       $('#scoreDiv').show();
       $(document).unbind('keypress');
+      initializeSnakeGame();
     }
-    initializeSnakeGame();
   }
 
   const socket = (function() {
