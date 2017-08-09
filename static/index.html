@@ -3,8 +3,9 @@
 
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="static/style.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.11/p5.min.js"></script>
   <script src="/socket.io/socket.io.js"></script>
@@ -13,6 +14,50 @@
 
 <body>
 
+
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-sm-7 col-md-8">
+        <div class="row">
+          <div class="col-sm-12">
+            <div id="scoreDiv">
+              <h3>Score: </h3>
+              <h4 id="score"></h4>
+            </div>
+          </div>
+          <div class="col-sm-12">
+            <div id="snakeCanvas"></div>
+          </div>
+          <div class="col-sm-12">
+            <h3 class="text-left">Controls</h3>
+            <button id="ctrlCntrClck" type="button" class="btn btn-info btn-lg">Counter</button>
+            <button id="ctrlClck" type="button" class="btn btn-info btn-lg">Clockwise</button>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-5 col-md-4">
+        <h3 class="text-left">LEADERBOARD</h3>
+        <table class="table table-striped" id="highScoreTable">
+          <thead>
+            <tr>
+              <th>Position</th>
+              <th>Name</th>
+              <th>High Score</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td>Prashant Gupta</td>
+              <td>999</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+
   <div id="initialDiv">
     <h3>Please enter name to start: (min 3 characters) </h3>
     <input type=text id="player_name"></input>
@@ -20,30 +65,14 @@
     <p id="error"></p>
   </div>
 
-  <div id="scoreDiv">
-    <h3>Score: </h3>
-    <p id="score"></p>
-  </div>
 
-  <div class="parent">
+
+  <!-- <div class="parent">
     <div id="snakeCanvas">
-    <input type=button id="start_game" value="Start Game"></input>
+      <input type=button id="start_game" value="Start Game"></input>
     </div>
-    <div class="scoreboard">
-      <table id="highScoreTable">
-        <tr class="header">
-          <th style="width:10%;">Position</th>
-          <th style="width:50%;">Name</th>
-          <th style="width:40%;">High Score</th>
-        </tr>
-        <tr>
-          <td>1</td>
-          <td>Prashant Gupta</td>
-          <td>999</td>
-        </tr>
-      </table>
-    </div>
-  </div>
+
+  </div> -->
 
 </body>
 

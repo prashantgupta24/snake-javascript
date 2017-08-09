@@ -58,8 +58,20 @@ $(function() {
 
   const SNAKE_GAME = function(snake) {
 
-    const CANVAS_WIDTH = 500;
-    const CANVAS_HEIGHT = 500;
+    let canvasWidth = $('#snakeCanvas').parent().width() - 40;
+    let canvasHeight = $('#snakeCanvas').parent().width() - 40;
+
+    // if(window.innerWidth < 1000) {
+    //   if(window.innerWidth > window.innerHeight) {
+    //     canvasWidth = canvasHeight = window.innerHeight - 50;
+    //   } else {
+    //     canvasWidth = canvasHeight = window.innerWidth - 50;
+    //   }
+    // } else {
+    //   canvasWidth = canvasHeight = 500;
+    // }
+
+
     // the snake is divided into small segments, which are drawn and edited on each 'draw' call
     let numSegments = 10;
     let direction = 'right';
@@ -69,8 +81,6 @@ $(function() {
     const DIFF = 10;
     let frameRate = 15;
 
-    const CONTROL_LINE_HEIGHT = 80;
-
     const X_COR = [];
     const Y_COR = [];
 
@@ -79,8 +89,10 @@ $(function() {
     const SCORE = $('#score');
 
     snake.setup = function() {
-      const CANVAS = snake.createCanvas(CANVAS_WIDTH, CANVAS_HEIGHT);
+      const CANVAS = snake.createCanvas(canvasWidth, canvasHeight);
       CANVAS.parent('snakeCanvas');
+      console.log('parent width : ' + $('#snakeCanvas').parent().width());
+      console.log('parent height: ' + $('#snakeCanvas').parent().height());
       snake.frameRate(frameRate);
       snake.background(0);
       snake.stroke(255);
@@ -88,7 +100,7 @@ $(function() {
       snake.strokeWeight(10);
       SCORE.html(0);
 
-      initializeMouseMove();
+      initializeControls();
       updateFruitCoordinates();
 
       for (let i = 0; i < numSegments; i++) {
@@ -102,8 +114,7 @@ $(function() {
       // console.log('yCOR : ' + Y_COR);
 
       snake.background(0);
-      snake.line(0, CANVAS_HEIGHT - CONTROL_LINE_HEIGHT, CANVAS_WIDTH, CANVAS_HEIGHT - CONTROL_LINE_HEIGHT);
-      snake.line(CANVAS_WIDTH / 2, CANVAS_HEIGHT - CONTROL_LINE_HEIGHT, CANVAS_WIDTH / 2, CANVAS_HEIGHT);
+
       for (let i = 0; i < numSegments - 1; i++) {
         snake.line(X_COR[i], Y_COR[i], X_COR[i + 1], Y_COR[i + 1]);
       }
@@ -214,55 +225,79 @@ $(function() {
       //console.log("y - " + yFruit);
     }
 
-    function initializeMouseMove() {
-      const canvasElement = document.getElementById('snakeCanvas');
-      const rect = canvasElement.getBoundingClientRect();
+    function initializeControls() {
+      $('#ctrlClck').on('click', function() {
+        switch (direction) {
+          case 'right':
+            direction = 'down';
+            break;
+          case 'up':
+            direction = 'right';
+            break;
+          case 'left':
+            direction = 'up';
+            break;
+          case 'down':
+            direction = 'left';
+            break;
+        }
+      });
 
-      $('#snakeCanvas').on('click', function(event) {
-        let x = event.pageX - rect.left;
-        let y = Math.floor(event.pageY - rect.top);
-        //onsole.log(x + ', ' + y);
-        handleMouseClick(x, y);
+      $('#ctrlCntrClck').on('click', function() {
+        switch (direction) {
+          case 'right':
+            direction = 'up';
+            break;
+          case 'up':
+            direction = 'left';
+            break;
+          case 'left':
+            direction = 'down';
+            break;
+          case 'down':
+            direction = 'right';
+            break;
+        }
       });
     }
 
-    function handleMouseClick(x, y) {
-      //counter-clockwise
-      if (x <= CANVAS_WIDTH / 2 && y >= 420) {
-        console.log('counter-clock');
-        switch (direction) {
-          case 'right':
-            direction = 'up';
-            break;
-          case 'up':
-            direction = 'left';
-            break;
-          case 'left':
-            direction = 'down';
-            break;
-          case 'down':
-            direction = 'right';
-            break;
-        }
-      } //clock-wise
-      else if (x > CANVAS_WIDTH / 2 && y >= 420) {
-        console.log('clock');
-        switch (direction) {
-          case 'right':
-            direction = 'down';
-            break;
-          case 'up':
-            direction = 'right';
-            break;
-          case 'left':
-            direction = 'up';
-            break;
-          case 'down':
-            direction = 'left';
-            break;
-        }
-      }
-    }
+    // function handleMouseClick(x, y) {
+    //   //counter-clockwise
+    //   if (x <= canvasWidth / 2 && y >= 420) {
+    //     console.log('counter-clock');
+    //     switch (direction) {
+    //       case 'right':
+    //         direction = 'up';
+    //         break;
+    //       case 'up':
+    //         direction = 'left';
+    //         break;
+    //       case 'left':
+    //         direction = 'down';
+    //         break;
+    //       case 'down':
+    //         direction = 'right';
+    //         break;
+    //     }
+    //   } //clock-wise
+    //   else if (x > canvasWidth / 2 && y >= 420) {
+    //     console.log('clock');
+    //     switch (direction) {
+    //       case 'right':
+    //         direction = 'down';
+    //         break;
+    //       case 'up':
+    //         direction = 'right';
+    //         break;
+    //       case 'left':
+    //         direction = 'up';
+    //         break;
+    //       case 'down':
+    //         direction = 'left';
+    //         break;
+    //     }
+    //   }
+    // }
 
     snake.keyPressed = function() {
       switch (snake.keyCode) {
