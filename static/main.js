@@ -6,8 +6,8 @@ $(function() {
       $('#initialDiv').hide();
       initializeSnakeGame();
     } else {
-      $('#scoreDiv').hide();
-      $('#player_name').focus();
+      $('#gameDiv').hide();
+      $('#playerName').focus();
 
       $(document).on('keypress', function(event) {
         if (event.keyCode === 13) {
@@ -15,7 +15,7 @@ $(function() {
         }
       });
 
-      $('#start_game').on('click', function() {
+      $('#startGame').on('click', function() {
         setupGame();
       });
     }
@@ -23,14 +23,14 @@ $(function() {
 
 
   function setupGame() {
-    const playerName = $('#player_name').val();
+    const playerName = $('#playerName').val();
     if (playerName.length < 3 ||
-      playerName.indexOf('prashant') > -1) {
-      $('#error').html('Please enter a decent name');
+      playerName.length > 10) {
+      $('#error').html('3-10 characters only please');
     } else {
       $.cookie('username', playerName);
       $('#initialDiv').hide();
-      $('#scoreDiv').show();
+      $('#gameDiv').show();
       $(document).unbind('keypress');
       initializeSnakeGame();
     }
@@ -61,23 +61,12 @@ $(function() {
     let canvasWidth = $('#snakeCanvas').parent().width() - 40;
     let canvasHeight = $('#snakeCanvas').parent().width() - 40;
 
-    // if(window.innerWidth < 1000) {
-    //   if(window.innerWidth > window.innerHeight) {
-    //     canvasWidth = canvasHeight = window.innerHeight - 50;
-    //   } else {
-    //     canvasWidth = canvasHeight = window.innerWidth - 50;
-    //   }
-    // } else {
-    //   canvasWidth = canvasHeight = 500;
-    // }
-
-
     // the snake is divided into small segments, which are drawn and edited on each 'draw' call
     let numSegments = 10;
     let direction = 'right';
 
     const SNAKE_XSTART = 0; //starting x coordinate for snake
-    const SNAKE_YSTART = 250; //starting y coordinate for snake
+    const SNAKE_YSTART = Math.floor(canvasWidth/20)*10; //starting y coordinate for snake
     const DIFF = 10;
     let frameRate = 15;
 
@@ -91,13 +80,10 @@ $(function() {
     snake.setup = function() {
       const CANVAS = snake.createCanvas(canvasWidth, canvasHeight);
       CANVAS.parent('snakeCanvas');
-      console.log('parent width : ' + $('#snakeCanvas').parent().width());
-      console.log('parent height: ' + $('#snakeCanvas').parent().height());
       snake.frameRate(frameRate);
       snake.background(0);
       snake.stroke(255);
-      snake.strokeWeight(3);
-      snake.strokeWeight(10);
+      snake.strokeWeight(6);
       SCORE.html(0);
 
       initializeControls();
@@ -260,44 +246,6 @@ $(function() {
         }
       });
     }
-
-    // function handleMouseClick(x, y) {
-    //   //counter-clockwise
-    //   if (x <= canvasWidth / 2 && y >= 420) {
-    //     console.log('counter-clock');
-    //     switch (direction) {
-    //       case 'right':
-    //         direction = 'up';
-    //         break;
-    //       case 'up':
-    //         direction = 'left';
-    //         break;
-    //       case 'left':
-    //         direction = 'down';
-    //         break;
-    //       case 'down':
-    //         direction = 'right';
-    //         break;
-    //     }
-    //   } //clock-wise
-    //   else if (x > canvasWidth / 2 && y >= 420) {
-    //     console.log('clock');
-    //     switch (direction) {
-    //       case 'right':
-    //         direction = 'down';
-    //         break;
-    //       case 'up':
-    //         direction = 'right';
-    //         break;
-    //       case 'left':
-    //         direction = 'up';
-    //         break;
-    //       case 'down':
-    //         direction = 'left';
-    //         break;
-    //     }
-    //   }
-    // }
 
     snake.keyPressed = function() {
       switch (snake.keyCode) {
