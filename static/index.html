@@ -2,6 +2,7 @@
 <html>
 
 <head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="static/style.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
@@ -25,7 +26,9 @@
   </div>
 
   <div class="parent">
-    <div id="snakeCanvas"></div>
+    <div id="snakeCanvas">
+    <input type=button id="start_game" value="Start Game"></input>
+    </div>
     <div class="scoreboard">
       <table id="highScoreTable">
         <tr class="header">

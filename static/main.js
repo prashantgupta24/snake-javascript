@@ -40,7 +40,7 @@ $(function() {
     let socket = io();
     socket.emit('new player');
     socket.on('updateScoreboard', function(data) {
-      console.log('received updated scoreboard');
+      //console.log('received updated scoreboard');
       let num = 2;
       $('#highScoreTable').find('tr:gt(1)').remove();
       let objArray = data;
@@ -58,6 +58,8 @@ $(function() {
 
   const SNAKE_GAME = function(snake) {
 
+    const CANVAS_WIDTH = 500;
+    const CANVAS_HEIGHT = 500;
     // the snake is divided into small segments, which are drawn and edited on each 'draw' call
     let numSegments = 10;
     let direction = 'right';
@@ -67,6 +69,8 @@ $(function() {
     const DIFF = 10;
     let frameRate = 15;
 
+    const CONTROL_LINE_HEIGHT = 80;
+
     const X_COR = [];
     const Y_COR = [];
 
@@ -75,12 +79,16 @@ $(function() {
     const SCORE = $('#score');
 
     snake.setup = function() {
-      const CANVAS = snake.createCanvas(500, 500);
+      const CANVAS = snake.createCanvas(CANVAS_WIDTH, CANVAS_HEIGHT);
       CANVAS.parent('snakeCanvas');
       snake.frameRate(frameRate);
+      snake.background(0);
       snake.stroke(255);
+      snake.strokeWeight(3);
       snake.strokeWeight(10);
       SCORE.html(0);
+
+      initializeMouseMove();
       updateFruitCoordinates();
 
       for (let i = 0; i < numSegments; i++) {
@@ -92,7 +100,10 @@ $(function() {
     snake.draw = function() {
       // console.log('xCOR : ' + X_COR);
       // console.log('yCOR : ' + Y_COR);
+
       snake.background(0);
+      snake.line(0, CANVAS_HEIGHT - CONTROL_LINE_HEIGHT, CANVAS_WIDTH, CANVAS_HEIGHT - CONTROL_LINE_HEIGHT);
+      snake.line(CANVAS_WIDTH / 2, CANVAS_HEIGHT - CONTROL_LINE_HEIGHT, CANVAS_WIDTH / 2, CANVAS_HEIGHT);
       for (let i = 0; i < numSegments - 1; i++) {
         snake.line(X_COR[i], Y_COR[i], X_COR[i + 1], Y_COR[i + 1]);
       }
@@ -201,6 +212,56 @@ $(function() {
       yFruit = snake.floor(snake.random(10, (snake.height - 100) / 10)) * 10;
       //console.log("x - " + xFruit);
       //console.log("y - " + yFruit);
+    }
+
+    function initializeMouseMove() {
+      const canvasElement = document.getElementById('snakeCanvas');
+      const rect = canvasElement.getBoundingClientRect();
+
+      $('#snakeCanvas').on('click', function(event) {
+        let x = event.pageX - rect.left;
+        let y = Math.floor(event.pageY - rect.top);
+        //onsole.log(x + ', ' + y);
+        handleMouseClick(x, y);
+      });
+    }
+
+    function handleMouseClick(x, y) {
+      //counter-clockwise
+      if (x <= CANVAS_WIDTH / 2 && y >= 420) {
+        console.log('counter-clock');
+        switch (direction) {
+          case 'right':
+            direction = 'up';
+            break;
+          case 'up':
+            direction = 'left';
+            break;
+          case 'left':
+            direction = 'down';
+            break;
+          case 'down':
+            direction = 'right';
+            break;
+        }
+      } //clock-wise
+      else if (x > CANVAS_WIDTH / 2 && y >= 420) {
+        console.log('clock');
+        switch (direction) {
+          case 'right':
+            direction = 'down';
+            break;
+          case 'up':
+            direction = 'right';
+            break;
+          case 'left':
+            direction = 'up';
+            break;
+          case 'down':
+            direction = 'left';
+            break;
+        }
+      }
     }
 
     snake.keyPressed = function() {
