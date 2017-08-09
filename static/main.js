@@ -1,8 +1,8 @@
 $(function() {
 
   const initializePage = function() {
-    if ($.cookie('username')) {
-      console.log('Welcome back ' + $.cookie('username'));
+    if (Cookies.get('username')) {
+      console.log('Welcome back ' + Cookies.get('username'));
       $('#initialDiv').hide();
       initializeSnakeGame();
     } else {
@@ -28,7 +28,7 @@ $(function() {
       playerName.length > 10) {
       $('#error').html('3-10 characters only please');
     } else {
-      $.cookie('username', playerName);
+      Cookies.set('username', playerName);
       $('#initialDiv').hide();
       $('#gameDiv').show();
       $(document).unbind('keypress');
@@ -58,8 +58,10 @@ $(function() {
 
   const SNAKE_GAME = function(snake) {
 
-    let canvasWidth = $('#snakeCanvas').parent().width() - 40;
-    let canvasHeight = $('#snakeCanvas').parent().width() - 40;
+    const PARENT_WIDTH = $('#snakeCanvas').parent().width();
+
+    let canvasWidth = PARENT_WIDTH > 500? 500 : PARENT_WIDTH - 40;
+    let canvasHeight = canvasWidth;
 
     // the snake is divided into small segments, which are drawn and edited on each 'draw' call
     let numSegments = 10;
@@ -78,6 +80,7 @@ $(function() {
     const SCORE = $('#score');
 
     snake.setup = function() {
+      console.log('width : '+$('#snakeCanvas').parent().width());
       const CANVAS = snake.createCanvas(canvasWidth, canvasHeight);
       CANVAS.parent('snakeCanvas');
       snake.frameRate(frameRate);
@@ -160,7 +163,7 @@ $(function() {
         snake.noLoop();
         const SCORE_VAL = SCORE.html();
         socket.emit('result', {
-          name: $.cookie('username'),
+          name: Cookies.get('username'),
           val: SCORE_VAL
         });
         SCORE.html('Game ended! Your score was : ' + SCORE_VAL);
