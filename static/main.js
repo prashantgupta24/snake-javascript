@@ -1,13 +1,13 @@
 $(function() {
 
   const initializePage = function() {
-    if ($.cookie('username')) {
-      console.log('Welcome back ' + $.cookie('username'));
+    if (Cookies.get('username')) {
+      console.log('Welcome back ' + Cookies.get('username'));
       $('#initialDiv').hide();
       initializeSnakeGame();
     } else {
-      $('#scoreDiv').hide();
-      $('#player_name').focus();
+      $('#gameDiv').hide();
+      $('#playerName').focus();
 
       $(document).on('keypress', function(event) {
         if (event.keyCode === 13) {
@@ -15,7 +15,7 @@ $(function() {
         }
       });
 
-      $('#start_game').on('click', function() {
+      $('#startGame').on('click', function() {
         setupGame();
       });
     }
@@ -23,14 +23,14 @@ $(function() {
 
 
   function setupGame() {
-    const playerName = $('#player_name').val();
+    const playerName = $('#playerName').val();
     if (playerName.length < 3 ||
-      playerName.indexOf('prashant') > -1) {
-      $('#error').html('Please enter a decent name');
+      playerName.length > 10) {
+      $('#error').html('3-10 characters only please');
     } else {
-      $.cookie('username', playerName);
+      Cookies.set('username', playerName);
       $('#initialDiv').hide();
-      $('#scoreDiv').show();
+      $('#gameDiv').show();
       $(document).unbind('keypress');
       initializeSnakeGame();
     }
@@ -40,7 +40,7 @@ $(function() {
     let socket = io();
     socket.emit('new player');
     socket.on('updateScoreboard', function(data) {
-      console.log('received updated scoreboard');
+      //console.log('received updated scoreboard');
       let num = 2;
       $('#highScoreTable').find('tr:gt(1)').remove();
       let objArray = data;
@@ -58,12 +58,17 @@ $(function() {
 
   const SNAKE_GAME = function(snake) {
 
+    const PARENT_WIDTH = $('#snakeCanvas').parent().width();
+
+    let canvasWidth = PARENT_WIDTH > 500? 500 : PARENT_WIDTH - 40;
+    let canvasHeight = canvasWidth;
+
     // the snake is divided into small segments, which are drawn and edited on each 'draw' call
     let numSegments = 10;
     let direction = 'right';
 
     const SNAKE_XSTART = 0; //starting x coordinate for snake
-    const SNAKE_YSTART = 250; //starting y coordinate for snake
+    const SNAKE_YSTART = Math.floor(canvasWidth/20)*10; //starting y coordinate for snake
     const DIFF = 10;
     let frameRate = 15;
 
@@ -75,12 +80,16 @@ $(function() {
     const SCORE = $('#score');
 
     snake.setup = function() {
-      const CANVAS = snake.createCanvas(500, 500);
+      console.log('width : '+$('#snakeCanvas').parent().width());
+      const CANVAS = snake.createCanvas(canvasWidth, canvasHeight);
       CANVAS.parent('snakeCanvas');
       snake.frameRate(frameRate);
+      snake.background(0);
       snake.stroke(255);
-      snake.strokeWeight(10);
+      snake.strokeWeight(6);
       SCORE.html(0);
+
+      initializeControls();
       updateFruitCoordinates();
 
       for (let i = 0; i < numSegments; i++) {
@@ -92,7 +101,9 @@ $(function() {
     snake.draw = function() {
       // console.log('xCOR : ' + X_COR);
       // console.log('yCOR : ' + Y_COR);
+
       snake.background(0);
+
       for (let i = 0; i < numSegments - 1; i++) {
         snake.line(X_COR[i], Y_COR[i], X_COR[i + 1], Y_COR[i + 1]);
       }
@@ -152,7 +163,7 @@ $(function() {
         snake.noLoop();
         const SCORE_VAL = SCORE.html();
         socket.emit('result', {
-          name: $.cookie('username'),
+          name: Cookies.get('username'),
           val: SCORE_VAL
         });
         SCORE.html('Game ended! Your score was : ' + SCORE_VAL);
@@ -201,6 +212,42 @@ $(function() {
       yFruit = snake.floor(snake.random(10, (snake.height - 100) / 10)) * 10;
       //console.log("x - " + xFruit);
       //console.log("y - " + yFruit);
+    }
+
+    function initializeControls() {
+      $('#ctrlClck').on('click', function() {
+        switch (direction) {
+          case 'right':
+            direction = 'down';
+            break;
+          case 'up':
+            direction = 'right';
+            break;
+          case 'left':
+            direction = 'up';
+            break;
+          case 'down':
+            direction = 'left';
+            break;
+        }
+      });
+
+      $('#ctrlCntrClck').on('click', function() {
+        switch (direction) {
+          case 'right':
+            direction = 'up';
+            break;
+          case 'up':
+            direction = 'left';
+            break;
+          case 'left':
+            direction = 'down';
+            break;
+          case 'down':
+            direction = 'right';
+            break;
+        }
+      });
     }
 
     snake.keyPressed = function() {
