@@ -87,7 +87,7 @@ $(function() {
       snake.background(0);
       snake.stroke(255);
       snake.strokeWeight(6);
-      SCORE.html(0);
+      SCORE.html('Score : ' + 0);
 
       if(window.innerWidth >=500) {
         $('#controls').hide();
@@ -165,7 +165,7 @@ $(function() {
         Y_COR[Y_COR.length - 1] < 0 ||
         checkSnakeCollision()) {
         snake.noLoop();
-        const SCORE_VAL = SCORE.html();
+        const SCORE_VAL = SCORE.html().substring(8);
         socket.emit('result', {
           name: Cookies.get('username'),
           val: SCORE_VAL
@@ -196,8 +196,8 @@ $(function() {
     function checkForFruit() {
       snake.point(xFruit, yFruit);
       if (X_COR[X_COR.length - 1] === xFruit && Y_COR[Y_COR.length - 1] === yFruit) {
-        const PREV_SCORE = parseInt(SCORE.html());
-        SCORE.html((PREV_SCORE + 1));
+        const PREV_SCORE = parseInt(SCORE.html().substring(8));
+        SCORE.html('Score : ' + (PREV_SCORE + 1));
         X_COR.unshift(X_COR[0]);
         Y_COR.unshift(Y_COR[0]);
         numSegments++;
