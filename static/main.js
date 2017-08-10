@@ -59,8 +59,9 @@ $(function() {
   const SNAKE_GAME = function(snake) {
 
     const PARENT_WIDTH = $('#snakeCanvas').parent().width();
+    const WINDOW_HEIGHT = window.innerHeight;
 
-    let canvasWidth = PARENT_WIDTH > 500? 500 : PARENT_WIDTH - 40;
+    let canvasWidth = PARENT_WIDTH > 500 && WINDOW_HEIGHT-100>500? 500 : PARENT_WIDTH > WINDOW_HEIGHT-100? WINDOW_HEIGHT-100: PARENT_WIDTH-40;
     let canvasHeight = canvasWidth;
 
     // the snake is divided into small segments, which are drawn and edited on each 'draw' call
@@ -80,7 +81,6 @@ $(function() {
     const SCORE = $('#score');
 
     snake.setup = function() {
-      console.log('width : '+$('#snakeCanvas').parent().width());
       const CANVAS = snake.createCanvas(canvasWidth, canvasHeight);
       CANVAS.parent('snakeCanvas');
       snake.frameRate(frameRate);
@@ -88,6 +88,10 @@ $(function() {
       snake.stroke(255);
       snake.strokeWeight(6);
       SCORE.html(0);
+
+      if(window.innerWidth >=500) {
+        $('#controls').hide();
+      }
 
       initializeControls();
       updateFruitCoordinates();
