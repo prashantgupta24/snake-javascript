@@ -1,38 +1,8 @@
-#highScoreTable {
-  border-collapse: collapse;
-  width: 100%;
-  border: 1px solid #ddd;
-  font-size: 18px;
-}
-
-#highScoreTable th, #highScoreTable td {
-  text-align: center;
-  padding: 12px;
-}
-
-#highScoreTable tr {
-  border-bottom: 1px solid #ddd;
-}
-
-#highScoreTable tr.header, #highScoreTable tr:hover {
-  background-color: #f1f1f1;
-}
-
-
-.parent div {
-  float:left;
-  clear: none;
-  padding-right: 10px;
-}
-
-.scoreboard {
-  width: 30%;
-  margin-left: 5%;
-  box-shadow: 10px 10px 5px #888888;
-  border: solid black 1px;
-}
-.parent p {
-  text-align: center;
-  font-size: xx-large;
-  font-style: italic;
+.gly-flip-horizontal {
+  filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=0, mirror=1);
+  -webkit-transform: scale(-1, 1);
+  -moz-transform: scale(-1, 1);
+  -ms-transform: scale(-1, 1);
+  -o-transform: scale(-1, 1);
+  transform: scale(-1, 1);
 }

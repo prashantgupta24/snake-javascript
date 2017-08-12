@@ -1,9 +1,13 @@
 $(function() {
 
   const initializePage = function() {
+
+    $('#restart').on('click', function() {
+      window.location.reload();
+    });
+
     if (Cookies.get('username')) {
       console.log('Welcome back ' + Cookies.get('username'));
-      $('#initialDiv').hide();
       initializeSnakeGame();
     } else {
       $('#gameDiv').hide();
@@ -29,7 +33,6 @@ $(function() {
       $('#error').html('3-10 characters only please');
     } else {
       Cookies.set('username', playerName);
-      $('#initialDiv').hide();
       $('#gameDiv').show();
       $(document).unbind('keypress');
       initializeSnakeGame();
@@ -71,7 +74,7 @@ $(function() {
     const SNAKE_XSTART = 0; //starting x coordinate for snake
     const SNAKE_YSTART = Math.floor(canvasWidth/20)*10; //starting y coordinate for snake
     const DIFF = 10;
-    let frameRate = 15;
+    let frameRate = 10;
 
     const X_COR = [];
     const Y_COR = [];
@@ -170,7 +173,8 @@ $(function() {
           name: Cookies.get('username'),
           val: SCORE_VAL
         });
-        SCORE.html('Game ended! Your score was : ' + SCORE_VAL);
+        SCORE.html('Game ended! Score : ' + SCORE_VAL);
+        $('#restart').show();
       }
     }
 
@@ -283,6 +287,8 @@ $(function() {
   initializePage();
 
   function initializeSnakeGame() {
+    $('#initialDiv').hide();
+    //$('#restart').hide();
     const SNAKE_GAME_OBJ = new p5(SNAKE_GAME);
   }
 });

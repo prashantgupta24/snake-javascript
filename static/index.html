@@ -4,6 +4,7 @@
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link rel="stylesheet" href="static/style.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.1.4/js.cookie.min.js"></script>
@@ -20,19 +21,21 @@
       <div class="col-sm-7 col-md-8">
         <div class="row" id="gameDiv">
           <div class="col-sm-12">
-            <h4 id="score">Score : </h4>
+            <p style="font-weight:bolder;font-size:large" id="score">Score : </p>
+            <button id="restart" type="button" class="btn btn-info">Play again</button>
           </div>
           <div class="col-sm-12">
             <div id="snakeCanvas"></div>
           </div>
           <div id="controls" class="col-sm-12">
             <h3 class="text-left">Controls</h3>
-            <button id="ctrlCntrClck" type="button" class="btn btn-info btn-lg" style="padding: 20px 30px;">Counter</button>
-            <button id="ctrlClck" type="button" class="btn btn-info btn-lg" style="padding: 20px 30px;">Clockwise</button>
+            <button id="ctrlCntrClck" type="button" class="btn btn-info btn-lg" style="padding: 15px 20px;">Counter  <span class="glyphicon glyphicon-repeat gly-flip-horizontal"></span></button>
+            <button id="ctrlClck" type="button" class="btn btn-info btn-lg" style="padding: 15px 20px;">Clockwise <span class="glyphicon glyphicon-repeat"></span></button>
           </div>
         </div>
         <div id="initialDiv" class="row">
           <div class="col-sm-12">
+            <h2>Welcome to the famous snake game!</h2>
             <h4>Please enter name to start: (3-10 characters) </h4>
           </div>
           <div class="col-sm-12">
@@ -41,6 +44,14 @@
             <button id="startGame" type="button" class="btn btn-info">Start Game</button>
             <div id="error" class="alert">
             </div>
+          </div>
+          <div class="col-sm-12">
+            <h3>How to play</h3>
+            <blockquote>
+              <p>There are 2 buttons, one is called <code>Counter <span class="glyphicon glyphicon-repeat gly-flip-horizontal"></span></code>, which moves the snake counter-clockwise. The other button is called <code>Counter <span class="glyphicon glyphicon-repeat"></span></code>,
+                which, as you might have guessed, moves the snake clockwise. <br><br> If you are playing on a computer, you can control the snake through your cursor keys.</p>
+              <footer>From the snake game developer</footer>
+            </blockquote>
           </div>
         </div>
       </div>
