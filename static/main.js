@@ -288,7 +288,7 @@ $(function() {
 
   function initializeSnakeGame() {
     $('#initialDiv').hide();
-    //$('#restart').hide();
+    $('#restart').hide();
     const SNAKE_GAME_OBJ = new p5(SNAKE_GAME);
   }
 });

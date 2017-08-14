@@ -18,19 +18,27 @@
 
   <div class="container-fluid">
     <div class="row">
-      <div class="col-sm-7 col-md-8">
-        <div class="row" id="gameDiv">
-          <div class="col-sm-12">
-            <p style="font-weight:bolder;font-size:large" id="score">Score : </p>
-            <button id="restart" type="button" class="btn btn-info">Play again</button>
+      <div class="col-sm-7 col-md-7">
+        <div id="gameDiv">
+          <div class="row">
+            <div class="col-sm-6">
+              <p style="font-weight:bolder;font-size:large" id="score">Score : </p>
+            </div>
+            <div class="col-sm-6">
+              <button id="restart" type="button" class="btn btn-info">Play again</button>
+            </div>
           </div>
-          <div class="col-sm-12">
-            <div id="snakeCanvas"></div>
+          <div class="row">
+            <div class="col-sm-12">
+              <div id="snakeCanvas"></div>
+            </div>
           </div>
-          <div id="controls" class="col-sm-12">
-            <h3 class="text-left">Controls</h3>
-            <button id="ctrlCntrClck" type="button" class="btn btn-info btn-lg" style="padding: 15px 20px;">Counter  <span class="glyphicon glyphicon-repeat gly-flip-horizontal"></span></button>
-            <button id="ctrlClck" type="button" class="btn btn-info btn-lg" style="padding: 15px 20px;">Clockwise <span class="glyphicon glyphicon-repeat"></span></button>
+          <div class="row">
+            <div id="controls" class="col-sm-12">
+              <h3 class="text-left">Controls</h3>
+              <button id="ctrlCntrClck" type="button" class="btn btn-info btn-lg" style="padding: 15px 20px;">Counter  <span class="glyphicon glyphicon-repeat gly-flip-horizontal"></span></button>
+              <button id="ctrlClck" type="button" class="btn btn-info btn-lg" style="padding: 15px 20px;">Clockwise <span class="glyphicon glyphicon-repeat"></span></button>
+            </div>
           </div>
         </div>
         <div id="initialDiv" class="row">
@@ -55,7 +63,7 @@
           </div>
         </div>
       </div>
-      <div class="col-sm-5 col-md-4">
+      <div class="col-sm-5 col-md-5">
         <h3 class="text-left">LEADERBOARD</h3>
         <table class="table table-striped" id="highScoreTable">
           <thead>
