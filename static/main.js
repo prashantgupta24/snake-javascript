@@ -289,6 +289,8 @@ $(function() {
   function initializeSnakeGame() {
     $('#initialDiv').hide();
     $('#restart').hide();
+    document.body.scrollTop = 0; // For Chrome, Safari and Opera
+    document.documentElement.scrollTop = 0; // For IE and Firefox
     const SNAKE_GAME_OBJ = new p5(SNAKE_GAME);
   }
 });

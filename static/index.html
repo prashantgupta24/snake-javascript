@@ -2,7 +2,7 @@
 <html>
 
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <link rel="stylesheet" href="static/style.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
@@ -18,42 +18,50 @@
 
   <div class="container-fluid">
     <div class="row">
-      <div class="col-sm-7 col-md-7">
+      <div class="col-xs-12 col-sm-6 col-md-5">
         <div id="gameDiv">
           <div class="row">
-            <div class="col-sm-6">
+            <div class="col-sm-6 col-md-6">
               <p style="font-weight:bolder;font-size:large" id="score">Score : </p>
             </div>
-            <div class="col-sm-6">
+            <div class="col-sm-6 col-md-6">
               <button id="restart" type="button" class="btn btn-info">Play again</button>
             </div>
           </div>
           <div class="row">
-            <div class="col-sm-12">
+            <div class="col-sm-12 col-md-12">
               <div id="snakeCanvas"></div>
             </div>
           </div>
-          <div class="row">
-            <div id="controls" class="col-sm-12">
-              <h3 class="text-left">Controls</h3>
-              <button id="ctrlCntrClck" type="button" class="btn btn-info btn-lg" style="padding: 15px 20px;">Counter  <span class="glyphicon glyphicon-repeat gly-flip-horizontal"></span></button>
-              <button id="ctrlClck" type="button" class="btn btn-info btn-lg" style="padding: 15px 20px;">Clockwise <span class="glyphicon glyphicon-repeat"></span></button>
+          <div id="controls">
+            <div class="row">
+              <div class="col-sm-12 col-sm-12">
+                <h3 class="text-left">Controls to move mouse:</h3>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-xs-6 col-sm-6">
+                <button id="ctrlCntrClck" type="button" class="btn btn-info btn-lg" style="padding: 35px 30px;">Counter   <span class="glyphicon glyphicon-repeat gly-flip-horizontal"></span></button>
+              </div>
+              <div class="col-xs-6 col-sm-6">
+                <button id="ctrlClck" type="button" class="btn btn-info btn-lg" style="padding: 35px 30px;">Clockwise <span class="glyphicon glyphicon-repeat"></span></button>
+              </div>
             </div>
           </div>
         </div>
         <div id="initialDiv" class="row">
-          <div class="col-sm-12">
+          <div class="col-xs-12">
             <h2>Welcome to the famous snake game!</h2>
             <h4>Please enter name to start: (3-10 characters) </h4>
           </div>
-          <div class="col-sm-12">
+          <div class="col-xs-12">
             <label for="playerName">Name:</label>
             <input type="text" id="playerName"></input>
             <button id="startGame" type="button" class="btn btn-info">Start Game</button>
             <div id="error" class="alert">
             </div>
           </div>
-          <div class="col-sm-12">
+          <div class="col-xs-12">
             <h3>How to play</h3>
             <blockquote>
               <p>There are 2 buttons, one is called <code>Counter <span class="glyphicon glyphicon-repeat gly-flip-horizontal"></span></code>, which moves the snake counter-clockwise. The other button is called <code>Counter <span class="glyphicon glyphicon-repeat"></span></code>,
@@ -63,7 +71,7 @@
           </div>
         </div>
       </div>
-      <div class="col-sm-5 col-md-5">
+      <div class="col-xs-12 col-sm-6 col-md-5">
         <h3 class="text-left">LEADERBOARD</h3>
         <table class="table table-striped" id="highScoreTable">
           <thead>
