@@ -19,12 +19,12 @@ app.get('/', function(request, response) {
   response.sendFile(path.join(__dirname, 'static/index.html'));
 });
 
-app.get('/12477421', function(request, response) {
-  fs.writeFile(dataFile, '', function(err) {
-    if (err) throw err;
-  });
-  response.end('Database deleted!');
-});
+// app.get('/12477421', function(request, response) {
+//   fs.writeFile(dataFile, '', function(err) {
+//     if (err) throw err;
+//   });
+//   response.end('Database deleted!');
+// });
 
 // app.get('/aaa/:user/:score', function (request, response) {
 //   console.log(request.params.user + ': ' + request.params.score);
