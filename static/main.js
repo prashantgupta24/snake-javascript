@@ -64,7 +64,7 @@ $(function() {
     const PARENT_WIDTH = $('#snakeCanvas').parent().width();
     const WINDOW_HEIGHT = window.innerHeight;
 
-    let canvasWidth = PARENT_WIDTH > 500 && WINDOW_HEIGHT-100>500? 500 : PARENT_WIDTH > WINDOW_HEIGHT-100? WINDOW_HEIGHT-100: PARENT_WIDTH-40;
+    let canvasWidth = PARENT_WIDTH > 500 && WINDOW_HEIGHT - 100 > 500 ? 500 : PARENT_WIDTH > WINDOW_HEIGHT - 100 ? WINDOW_HEIGHT - 100 : PARENT_WIDTH - 40;
     let canvasHeight = canvasWidth;
 
     // the snake is divided into small segments, which are drawn and edited on each 'draw' call
@@ -72,10 +72,10 @@ $(function() {
     let direction = 'right';
 
     const SNAKE_XSTART = 0; //starting x coordinate for snake
-    const SNAKE_YSTART = Math.floor(canvasWidth/20)*10; //starting y coordinate for snake
+    const SNAKE_YSTART = Math.floor(canvasWidth / 20) * 10; //starting y coordinate for snake
     const DIFF = 10;
     let frameRate = 10;
-    let keyPressed = false;
+    let directionsQueue = [];
 
     const X_COR = [];
     const Y_COR = [];
@@ -93,7 +93,7 @@ $(function() {
       snake.strokeWeight(6);
       SCORE.html('Score : ' + 0);
 
-      if(window.innerWidth >=500) {
+      if (window.innerWidth >= 500) {
         $('#controls').hide();
       }
 
@@ -115,10 +115,46 @@ $(function() {
       for (let i = 0; i < numSegments - 1; i++) {
         snake.line(X_COR[i], Y_COR[i], X_COR[i + 1], Y_COR[i + 1]);
       }
+      handleDirection();
       updateSnakeCoordinates();
       checkGameStatus();
       checkForFruit();
     };
+
+    /*
+    I store the directions in a queue, and pop them once every
+    time the 'draw' function is called. This way the snake always
+    has one unique direction to head towards (in case the user presses
+    2 direction keys at the same time)
+
+    */
+    function handleDirection() {
+      if (directionsQueue.length > 0) {
+        const DIRECTION = directionsQueue.shift();
+        switch (DIRECTION) {
+          case 'left':
+            if (direction != 'right') {
+              direction = 'left';
+            }
+            break;
+          case 'right':
+            if (direction != 'left') {
+              direction = 'right';
+            }
+            break;
+          case 'up':
+            if (direction != 'down') {
+              direction = 'up';
+            }
+            break;
+          case 'down':
+            if (direction != 'up') {
+              direction = 'down';
+            }
+            break;
+        }
+      }
+    }
 
     /*
      The snake segments are updated based on the direction of the snake.
@@ -259,35 +295,23 @@ $(function() {
       });
     }
 
-    snake.keyReleased = function() {
+    snake.keyPressed = function() {
       switch (snake.keyCode) {
         case snake.LEFT_ARROW:
-          if (direction != 'right' && !keyPressed) {
-            direction = 'left';
-            keyPressed = true;
-            setTimeout(function() {keyPressed = false;}, 50);
-          }
+          directionsQueue.push('left');
+          //console.log('adding left');
           break;
         case snake.RIGHT_ARROW:
-          if (direction != 'left' && !keyPressed) {
-            direction = 'right';
-            keyPressed = true;
-            setTimeout(function() {keyPressed = false;}, 50);
-          }
+          directionsQueue.push('right');
+          //console.log('adding right');
           break;
         case snake.UP_ARROW:
-          if (direction != 'down' && !keyPressed) {
-            direction = 'up';
-            keyPressed = true;
-            setTimeout(function() {keyPressed = false;}, 50);
-          }
+          directionsQueue.push('up');
+          //console.log('adding up');
           break;
         case snake.DOWN_ARROW:
-          if (direction != 'up' && !keyPressed) {
-            direction = 'down';
-            keyPressed = true;
-            setTimeout(function() {keyPressed = false;}, 50);
-          }
+          directionsQueue.push('down');
+          //console.log('adding down');
           break;
       }
     };
