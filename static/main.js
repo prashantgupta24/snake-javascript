@@ -1,14 +1,71 @@
 $(function() {
 
+  const initializePage = function() {
+    if ($.cookie('username')) {
+      console.log('Welcome back ' + $.cookie('username'));
+      $('#initialDiv').hide();
+      initializeSnakeGame();
+    } else {
+      $('#scoreDiv').hide();
+      $('#player_name').focus();
+
+      $(document).on('keypress', function(event) {
+        if (event.keyCode === 13) {
+          setupGame();
+        }
+      });
+
+      $('#start_game').on('click', function() {
+        setupGame();
+      });
+    }
+  };
+
+
+  function setupGame() {
+    const playerName = $('#player_name').val();
+    if (playerName.length < 3 ||
+      playerName.indexOf('prashant') > -1) {
+      $('#error').html('Please enter a decent name');
+    } else {
+      $.cookie('username', playerName);
+      $('#initialDiv').hide();
+      $('#scoreDiv').show();
+      $(document).unbind('keypress');
+      initializeSnakeGame();
+    }
+  }
+
+  const socket = (function() {
+    let socket = io();
+    socket.emit('new player');
+    socket.on('updateScoreboard', function(data) {
+      console.log('received updated scoreboard');
+      let num = 2;
+      $('#highScoreTable').find('tr:gt(1)').remove();
+      let objArray = data;
+      for (let i = 0; i < objArray.length && i < 9; i++) {
+        let json = objArray[i];
+        //console.log(json.name + ' : ' + json.val);
+        let markup = '<tr><td>' + num + '</td><td>' + json.name + '</td><td>' + json.val + '</td></tr>';
+        $('#highScoreTable').append(markup);
+        num++;
+      }
+    });
+
+    return socket;
+  })();
+
   const SNAKE_GAME = function(snake) {
 
     // the snake is divided into small segments, which are drawn and edited on each 'draw' call
     let numSegments = 10;
     let direction = 'right';
 
-    const SNAKE_XSTART = 250; //starting x coordinate for snake
+    const SNAKE_XSTART = 0; //starting x coordinate for snake
     const SNAKE_YSTART = 250; //starting y coordinate for snake
     const DIFF = 10;
+    let frameRate = 15;
 
     const X_COR = [];
     const Y_COR = [];
@@ -18,10 +75,9 @@ $(function() {
     const SCORE = $('#score');
 
     snake.setup = function() {
-      //console.log('started');
       const CANVAS = snake.createCanvas(500, 500);
       CANVAS.parent('snakeCanvas');
-      snake.frameRate(15);
+      snake.frameRate(frameRate);
       snake.stroke(255);
       snake.strokeWeight(10);
       SCORE.html(0);
@@ -79,7 +135,7 @@ $(function() {
           X_COR[numSegments - 1] = X_COR[numSegments - 2];
           Y_COR[numSegments - 1] = Y_COR[numSegments - 2] + DIFF;
           break;
-        }
+      }
     }
 
     /*
@@ -89,12 +145,16 @@ $(function() {
     */
     function checkGameStatus() {
       if (X_COR[X_COR.length - 1] > snake.width ||
-          X_COR[X_COR.length - 1] < 0 ||
-          Y_COR[Y_COR.length - 1] > snake.height ||
-          Y_COR[Y_COR.length - 1] < 0 ||
-          checkSnakeCollision()) {
+        X_COR[X_COR.length - 1] < 0 ||
+        Y_COR[Y_COR.length - 1] > snake.height ||
+        Y_COR[Y_COR.length - 1] < 0 ||
+        checkSnakeCollision()) {
         snake.noLoop();
         const SCORE_VAL = SCORE.html();
+        socket.emit('result', {
+          name: $.cookie('username'),
+          val: SCORE_VAL
+        });
         SCORE.html('Game ended! Your score was : ' + SCORE_VAL);
       }
     }
@@ -103,11 +163,11 @@ $(function() {
      If the snake hits itself, that means the snake head's (x,y) coordinate
      has to be the same as one of its own segment's (x,y) coordinate.
     */
-    function checkSnakeCollision () {
+    function checkSnakeCollision() {
       const SNAKE_HEAD_X = X_COR[X_COR.length - 1];
       const SNAKE_HEAD_Y = Y_COR[Y_COR.length - 1];
-      for(let i=0;i<X_COR.length-1;i++){
-        if(X_COR[i] === SNAKE_HEAD_X && Y_COR[i] === SNAKE_HEAD_Y) {
+      for (let i = 0; i < X_COR.length - 1; i++) {
+        if (X_COR[i] === SNAKE_HEAD_X && Y_COR[i] === SNAKE_HEAD_Y) {
           return true;
         }
       }
@@ -126,6 +186,7 @@ $(function() {
         X_COR.unshift(X_COR[0]);
         Y_COR.unshift(Y_COR[0]);
         numSegments++;
+        snake.setFrameRate(frameRate++);
         updateFruitCoordinates();
       }
     }
@@ -136,38 +197,41 @@ $(function() {
         in between 100 and width-100, and be rounded off to the nearest
         number divisible by 10, since I move the snake in multiples of 10.
       */
-      xFruit = snake.floor(snake.random(10,(snake.width-100)/10))*10;
-      yFruit = snake.floor(snake.random(10,(snake.height-100)/10))*10;
+      xFruit = snake.floor(snake.random(10, (snake.width - 100) / 10)) * 10;
+      yFruit = snake.floor(snake.random(10, (snake.height - 100) / 10)) * 10;
       //console.log("x - " + xFruit);
       //console.log("y - " + yFruit);
     }
 
     snake.keyPressed = function() {
       switch (snake.keyCode) {
-      case snake.LEFT_ARROW:
-        if (direction != 'right') {
-          direction = 'left';
-        }
-        break;
-      case snake.RIGHT_ARROW:
-        if (direction != 'left') {
-          direction = 'right';
-        }
-        break;
-      case snake.UP_ARROW:
-        if (direction != 'down') {
-          direction = 'up';
-        }
-        break;
-      case snake.DOWN_ARROW:
-        if (direction != 'up') {
-          direction = 'down';
-        }
-        break;
+        case snake.LEFT_ARROW:
+          if (direction != 'right') {
+            direction = 'left';
+          }
+          break;
+        case snake.RIGHT_ARROW:
+          if (direction != 'left') {
+            direction = 'right';
+          }
+          break;
+        case snake.UP_ARROW:
+          if (direction != 'down') {
+            direction = 'up';
+          }
+          break;
+        case snake.DOWN_ARROW:
+          if (direction != 'up') {
+            direction = 'down';
+          }
+          break;
       }
     };
   };
 
-  const SNAKE_GAME_OBJ = new p5(SNAKE_GAME);
+  initializePage();
 
+  function initializeSnakeGame() {
+    const SNAKE_GAME_OBJ = new p5(SNAKE_GAME);
+  }
 });
