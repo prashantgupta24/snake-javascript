@@ -75,6 +75,7 @@ $(function() {
     const SNAKE_YSTART = Math.floor(canvasWidth/20)*10; //starting y coordinate for snake
     const DIFF = 10;
     let frameRate = 10;
+    let keyPressed = false;
 
     const X_COR = [];
     const Y_COR = [];
@@ -258,26 +259,34 @@ $(function() {
       });
     }
 
-    snake.keyPressed = function() {
+    snake.keyReleased = function() {
       switch (snake.keyCode) {
         case snake.LEFT_ARROW:
-          if (direction != 'right') {
+          if (direction != 'right' && !keyPressed) {
             direction = 'left';
+            keyPressed = true;
+            setTimeout(function() {keyPressed = false;}, 50);
           }
           break;
         case snake.RIGHT_ARROW:
-          if (direction != 'left') {
+          if (direction != 'left' && !keyPressed) {
             direction = 'right';
+            keyPressed = true;
+            setTimeout(function() {keyPressed = false;}, 50);
           }
           break;
         case snake.UP_ARROW:
-          if (direction != 'down') {
+          if (direction != 'down' && !keyPressed) {
             direction = 'up';
+            keyPressed = true;
+            setTimeout(function() {keyPressed = false;}, 50);
           }
           break;
         case snake.DOWN_ARROW:
-          if (direction != 'up') {
+          if (direction != 'up' && !keyPressed) {
             direction = 'down';
+            keyPressed = true;
+            setTimeout(function() {keyPressed = false;}, 50);
           }
           break;
       }
