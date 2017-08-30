@@ -1,11 +1,12 @@
 <!DOCTYPE html>
-<html>
+<html ng-app="snakeGame">
 
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <link rel="stylesheet" href="static/style.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.1.4/js.cookie.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.5.11/p5.min.js"></script>
@@ -17,13 +18,13 @@
 <body>
 
 
-  <div class="container-fluid">
+  <div class="container-fluid" ng-controller="MainCtrl as MainCtrl">
     <div class="row">
       <div class="col-xs-12 col-sm-6 col-md-5">
-        <div id="gameDiv">
+        <div id="gameDiv" ng-hide="MainCtrl.usernameSet">
           <div class="row">
             <div class="col-sm-6 col-md-6">
-              <p style="font-weight:bolder;font-size:large" id="score">Score : </p>
+              <p style="font-weight:bolder;font-size:large" id="score">Score : {{score}}</p>
             </div>
             <div class="col-sm-6 col-md-6">
               <button id="restart" type="button" class="btn btn-info">Play again</button>
@@ -50,17 +51,16 @@
             </div>
           </div>
         </div>
-        <div id="initialDiv" class="row">
+        <div id="initialDiv" class="row" ng-hide="MainCtrl.usernameSet">
           <div class="col-xs-12">
-            <h2>Welcome to the famous snake game!</h2>
+            <h2>Welcome to the famous snake game {{MainCtrl.username}}!</h2>
             <h4>Please enter name to start: (3-10 characters) </h4>
           </div>
           <div class="col-xs-12">
             <label for="playerName">Name:</label>
-            <input type="text" id="playerName"></input>
-            <button id="startGame" type="button" class="btn btn-info">Start Game</button>
-            <div id="error" class="alert">
-            </div>
+            <input type="text" id="playerName" ng-model="MainCtrl.username"></input>
+            <button id="startGame" type="button" class="btn btn-info" ng-click="MainCtrl.startGame()">Start Game</button>
+            <div class="alert"> {{MainCtrl.errorMsg}}</div>
           </div>
           <div class="col-xs-12">
             <h3>How to play</h3>
