@@ -1,9 +1,11 @@
-const SNAKE_GAME = (function () {
+const SNAKE_GAME = (function() {
 
   const SNAKE_GAME_FUNCTION = function(snake) {
 
     const PARENT_WIDTH = $('#snakeCanvas').parent().width();
+    //console.log('parent width = ' + PARENT_WIDTH);
     const WINDOW_HEIGHT = window.innerHeight;
+    //console.log('window.innerHeight = ' + WINDOW_HEIGHT);
 
     let canvasWidth = PARENT_WIDTH > 500 && WINDOW_HEIGHT - 100 > 500 ? 500 : PARENT_WIDTH > WINDOW_HEIGHT - 100 ? WINDOW_HEIGHT - 100 : PARENT_WIDTH - 40;
     let canvasHeight = canvasWidth;
@@ -32,7 +34,19 @@ const SNAKE_GAME = (function () {
       snake.background(0);
       snake.stroke(255);
       snake.strokeWeight(6);
-      SCORE.html('Score : ' + 0);
+      //SCORE.html('Score : ' + 0);
+
+      //const SCOPE = angular.element($("#MainCtrl")).scope();
+      var appElement = document.querySelector('[ng-app=snakeGame]');
+      var $scope = angular.element(appElement).scope();
+      //$scope = $scope.$$childHead; // add this and it will work
+      $scope.$apply(function() {
+        $scope.score = 20;
+      });
+      // SCOPE.$apply(function(){
+      //   SCOPE.score = 3;
+      // })
+
 
       if (window.innerWidth >= 500) {
         $('#controls').hide();
@@ -146,13 +160,12 @@ const SNAKE_GAME = (function () {
         Y_COR[Y_COR.length - 1] < 0 ||
         checkSnakeCollision()) {
         snake.noLoop();
-        const SCORE_VAL = SCORE.html().substring(8);
-        SNAKE_GAME_SOCKET.emit('result', {
-          name: Cookies.get('username'),
-          val: SCORE_VAL
-        });
-        SCORE.html('Game ended! Score : ' + SCORE_VAL);
-        $('#restart').show();
+        // const SCORE_VAL = SCORE.html().substring(8);
+        // SNAKE_GAME_SOCKET.emit('result', {
+        //   name: Cookies.get('username'),
+        //   val: SCORE_VAL
+        // });
+        //SCORE.html('Game ended! Score : ' + SCORE_VAL);
       }
     }
 
@@ -178,8 +191,8 @@ const SNAKE_GAME = (function () {
     function checkForFruit() {
       snake.point(xFruit, yFruit);
       if (X_COR[X_COR.length - 1] === xFruit && Y_COR[Y_COR.length - 1] === yFruit) {
-        const PREV_SCORE = parseInt(SCORE.html().substring(8));
-        SCORE.html('Score : ' + (PREV_SCORE + 1));
+        //const PREV_SCORE = parseInt(SCORE.html().substring(8));
+        //SCORE.html('Score : ' + (PREV_SCORE + 1));
         X_COR.unshift(X_COR[0]);
         Y_COR.unshift(Y_COR[0]);
         numSegments++;
